@@ -13,7 +13,7 @@ export default class AthleteReducer extends BaseReducer {
       switch (key) {
         case 'Name':
           if (!value) return
-          filteredData[key] = value.replace(/ *\([^)]*\) */g, '')
+          filteredData[key] = value.replace(/ *\([^)]*\) */g, '').replace(/["']/g, "")
           break
         case 'Sex':
           if (!value) filteredData[key] = null
