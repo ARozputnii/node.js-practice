@@ -11,23 +11,20 @@ export default class DbConnector {
         if (err) {
           return console.error(err.message)
         } else {
-          resolve(new DbConnector({id: row || null}))
+          resolve(new DbConnector(row || null))
         }
       })
     })
   }
 
-  async setRecord (createQuery, updateQuery = null, updateCondition = null) {
+  setRecord (createQuery, updateQuery = null, updateCondition = null) {
     return new Promise(async (resolve) => {
-      if (this.record.id && updateQuery && updateCondition) {
-        this.record = await this._runToDb(updateQuery)
-      } else if (!this.record.id) {
-        this.record.id = await this._runToDb(createQuery)
-      } else {
-        return
+      if (this.record && updateQuery && updateCondition) {
+        this.record = { id: await this._runToDb(updateQuery) }
+      } else if (!this.record) {
+        this.record = { id: await this._runToDb(createQuery) }
       }
-
-      resolve(this.record.id)
+      resolve(this.record)
     })
   }
 
