@@ -34,11 +34,11 @@ async function saveToDB (line) {
     `INSERT INTO teams (name, noc_name) VALUES ("${teamData.Team}", "${teamData.NOC}")`
   )
 
-  let athleteID = await DbConnector.getRecord(
+  let athlete = await DbConnector.getRecord(
     'SELECT athletes.id FROM athletes ' +
     `WHERE full_name = "${athleteData.Name}" AND year_of_birth="${athleteData.Age}" AND sex="${athleteData.Sex}"`
   )
-  athleteID = await athleteID.setRecord(
+  athlete = await athlete.setRecord(
     'INSERT INTO athletes (full_name, year_of_birth, sex, params, team_id) ' +
     `VALUES ('${athleteData.Name}', '${athleteData.Age}', '${athleteData.Sex}', ` +
     `'${JSON.stringify(athleteData.Params)}', '${team.id}')`
@@ -57,19 +57,19 @@ async function saveToDB (line) {
     )
   }
 
-  let sportID = await DbConnector.getRecord(`SELECT sports.id AS id FROM sports WHERE name='${sportData.Sport}'`)
-  sportID = await sportID.setRecord(`INSERT INTO sports (name) VALUES ("${sportData.Sport}")`)
+  let sport = await DbConnector.getRecord(`SELECT sports.id AS id FROM sports WHERE name='${sportData.Sport}'`)
+  sport = await sport.setRecord(`INSERT INTO sports (name) VALUES ("${sportData.Sport}")`)
 
-  let eventID = await DbConnector.getRecord(`SELECT events.id AS id FROM events WHERE name='${eventData.Event}'`)
-  eventID = await eventID.setRecord(`INSERT INTO events (name) VALUES ("${eventData.Event}")`)
+  let event = await DbConnector.getRecord(`SELECT events.id AS id FROM events WHERE name='${eventData.Event}'`)
+  event = await event.setRecord(`INSERT INTO events (name) VALUES ("${eventData.Event}")`)
 
   const resultID = await DbConnector.getRecord(
     'SELECT results.id AS id FROM results ' +
-    `WHERE athlete_id='${athleteID}' AND game_id='${game.id}' AND sport_id='${sportID}' ` +
-    `AND event_id='${eventID}' AND medal='${resultData.Medal}'`
+    `WHERE athlete_id='${athlete.id}' AND game_id='${game.id}' AND sport_id='${sport.id}' ` +
+    `AND event_id='${event.id}' AND medal='${resultData.Medal}'`
   )
   resultID.setRecord('INSERT INTO results (athlete_id, game_id, sport_id, event_id, medal ) ' +
-    `VALUES ("${athleteID}", "${game.id}", "${sportID}", "${eventID}", "${resultData.Medal}")`
+    `VALUES ("${athlete.id}", "${game.id}", "${sport.id}", "${event.id}", "${resultData.Medal}")`
   )
 
   return line.ID

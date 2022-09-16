@@ -12,7 +12,7 @@ export default class ResultReducer extends BaseReducer {
     Object.entries(filteredData).forEach(([key, value]) => {
       if (key === 'Medal') {
         switch (value){
-          case 'N/A':
+          case 'NA':
             filteredData[key] = 0
             break
           case 'Gold':
