@@ -5,7 +5,7 @@ export default class DbConnector {
     this.record = record
   }
 
-  static async getRecord (query) {
+  static getRecord (query) {
     return new Promise(function (resolve) {
       db.get(query, function (err, row) {
         if (err) {
@@ -17,15 +17,13 @@ export default class DbConnector {
     })
   }
 
-  setRecord (createQuery, updateQuery = null, updateCondition = null) {
-    return new Promise(async (resolve) => {
-      if (this.record && updateQuery && updateCondition) {
-        this.record = { id: await this._runToDb(updateQuery) }
-      } else if (!this.record) {
-        this.record = { id: await this._runToDb(createQuery) }
-      }
-      resolve(this.record)
-    })
+  async setRecord (createQuery, updateQuery = null, updateCondition = null) {
+    if (this.record && updateQuery && updateCondition) {
+      this.record = { id: await this._runToDb(updateQuery) }
+    } else if (!this.record) {
+      this.record = { id: await this._runToDb(createQuery) }
+    }
+    return this.record
   }
 
   _runToDb (query) {
