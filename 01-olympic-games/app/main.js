@@ -19,16 +19,16 @@ prompt.get(property, function (err, result) {
       if (chartName === 'medals') {
         console.log('Year Team Amount')
         for (const result of results) {
-          console.log(
-            `${result.year} ${result.noc_name}  ${'\u2610'.repeat(result.medal_count)}`
-          )
+          console.log(`${result.year} ${result.noc_name}  ${'\u2610'.repeat(result.medal_count)}`)
         }
       } else {
+        const topValue = results[0].count_medal
+        results[0].proportionalValue = 200
+
         console.log('Year Amount')
         for (const result of results) {
-          console.log(
-            `${result.noc_name}  ${'\u2610'.repeat(result.count_medal)}`
-          )
+          if (!result.proportionalValue) result.proportionalValue = result.count_medal * 200 / topValue
+          console.log(`${result.noc_name}  ${'\u2610'.repeat(result.proportionalValue)}`)
         }
       }
     })
