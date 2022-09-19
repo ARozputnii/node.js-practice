@@ -1,7 +1,7 @@
 import db from '../config/database.js'
 
 export default class DbConnector {
-  constructor (record) {
+  constructor (record=null) {
     this.record = record
   }
 
@@ -26,13 +26,22 @@ export default class DbConnector {
     return this.record
   }
 
+  getAllRecords (sql) {
+    return new Promise(function (resolve) {
+      db.all(sql, [], (err, rows) => {
+        if (err) return console.error(err.message)
+
+        resolve(rows)
+      });
+    })
+  }
+
   _runToDb (query) {
     return new Promise(function (resolve) {
       db.serialize(function () {
         db.run(query, function (err) {
-          if (err) {
-            return console.error(err.message)
-          }
+          if (err) return console.error(err.message)
+
           resolve(this.lastID)
         })
       })

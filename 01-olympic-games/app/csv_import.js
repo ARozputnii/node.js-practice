@@ -13,9 +13,9 @@ const csvData = new Parser(filePath).parse()
 async function importCSV () {
   for (const promise of csvData) {
     const line = await promise
-    const result = await saveToDB(line)
+    const lineNumber = await saveToDB(line)
 
-    console.log(result)
+    console.log(lineNumber)
   }
 }
 
